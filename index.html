@@ -20,6 +20,17 @@
         .mulch-brown {
             background-color: #DEB887;
         }
+        @keyframes pulse-green {
+            0%, 100% {
+                box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+            }
+            50% {
+                box-shadow: 0 0 0 10px rgba(16, 185, 129, 0);
+            }
+        }
+        .pulse-button {
+            animation: pulse-green 2s infinite;
+        }
     </style>
 </head>
 <body class="bg-gray-100 font-sans">
@@ -43,6 +54,33 @@
             </div>
         </div>
     </nav>
+
+    <!-- Notification Banner -->
+    <div class="bg-green-700 shadow-lg">
+        <div class="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8">
+            <div class="bg-white rounded-lg shadow-inner p-6">
+                <div class="flex flex-col sm:flex-row items-center justify-between">
+                    <div class="flex items-center mb-4 sm:mb-0">
+                        <div class="flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-green-100 text-green-700">
+                            <i class="fas fa-tools text-2xl"></i>
+                        </div>
+                        <div class="ml-4">
+                            <h3 class="text-lg font-bold text-gray-900">Thank you for using MulchMapper!</h3>
+                            <p class="text-gray-600">We're temporarily offline for exciting updates as we prepare version 2.0 with even more powerful features.</p>
+                        </div>
+                    </div>
+                    <div class="mt-4 sm:mt-0">
+                        <form class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-3">
+                            <input type="email" placeholder="Your email address" class="px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500">
+                            <button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-green-700 hover:bg-green-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 pulse-button">
+                                <i class="fas fa-bell mr-2"></i> Notify Me When 2.0 Launches
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <header class="hero-pattern py-16 sm:py-24">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
