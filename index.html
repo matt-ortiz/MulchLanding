@@ -31,9 +31,44 @@
         .pulse-button {
             animation: pulse-green 2s infinite;
         }
+        @keyframes highlight-banner {
+            0% { transform: translateY(0); }
+            10% { transform: translateY(-5px); }
+            20% { transform: translateY(0); }
+            30% { transform: translateY(-5px); }
+            40% { transform: translateY(0); }
+            100% { transform: translateY(0); }
+        }
+        .highlight-banner {
+            animation: highlight-banner 1.5s ease-in-out;
+        }
     </style>
 </head>
 <body class="bg-gray-100 font-sans">
+    <script>
+        // Function to handle animation reset
+        function resetAnimation(element) {
+            element.classList.remove('highlight-banner');
+            void element.offsetWidth; // Trigger reflow
+            element.classList.add('highlight-banner');
+        }
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            // When the waitlist link is clicked in the register modal
+            document.querySelectorAll('.join-waitlist-btn').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    document.getElementById('register-org-modal').classList.add('hidden');
+                    const bannerEl = document.querySelector('.notification-banner');
+                    bannerEl.scrollIntoView({behavior: 'smooth'});
+                    resetAnimation(bannerEl);
+                    setTimeout(() => {
+                        document.getElementById('notify-email').focus();
+                    }, 800);
+                });
+            });
+        });
+    </script>
     <nav class="bg-white shadow-md">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-16">
@@ -42,13 +77,19 @@
                         <i class="fas fa-tree text-green-700 text-3xl mr-2"></i>
                         <span class="text-2xl font-bold text-green-800">MulchMapper</span>
                     </div>
+                    <div class="hidden md:ml-6 md:flex md:items-center md:space-x-4">
+                        <a href="/pages/documentation.html" class="text-gray-700 hover:text-green-900 hover:bg-green-50 px-3 py-2 rounded-md text-sm font-medium">Documentation</a>
+                        <a href="/pages/driver-guide.html" class="text-gray-700 hover:text-green-900 hover:bg-green-50 px-3 py-2 rounded-md text-sm font-medium">Driver Guide</a>
+                        <a href="/pages/faqs.html" class="text-gray-700 hover:text-green-900 hover:bg-green-50 px-3 py-2 rounded-md text-sm font-medium">FAQs</a>
+                        <a href="/pages/about-us.html" class="text-gray-700 hover:text-green-900 hover:bg-green-50 px-3 py-2 rounded-md text-sm font-medium">About Us</a>
+                    </div>
                 </div>
                 <div class="flex items-center">
-                    <a href="/login" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-700 hover:bg-green-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
-                        Sign In
+                    <a href="#register-org-modal" onclick="document.getElementById('register-org-modal').classList.remove('hidden')" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 mr-4">
+                        <i class="fas fa-building mr-2"></i> Register Organization
                     </a>
-                    <a href="/register" class="ml-4 inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
-                        Register as Driver
+                    <a href="#school-login-modal" onclick="document.getElementById('school-login-modal').classList.remove('hidden')" class="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                        Organization Login
                     </a>
                 </div>
             </div>
@@ -56,7 +97,7 @@
     </nav>
 
     <!-- Notification Banner -->
-    <div class="bg-green-700 shadow-lg">
+    <div class="bg-green-700 shadow-lg notification-banner">
         <div class="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8">
             <div class="bg-white rounded-lg shadow-inner p-6">
                 <div class="flex flex-col sm:flex-row items-center justify-between">
@@ -70,9 +111,22 @@
                         </div>
                     </div>
                     <div class="mt-4 sm:mt-0">
-                        <form class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-3">
-                            <input type="email" placeholder="Your email address" class="px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500">
-                            <button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-green-700 hover:bg-green-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 pulse-button">
+                        <form class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-3" method="post" accept-charset="UTF-8" action="https://www.aweber.com/scripts/addlead.pl">
+                            <input type="email" id="notify-email" placeholder="Your email address" name="email" class="px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500">
+                            
+                            <input type="hidden" name="meta_web_form_id" value="1064448742" />
+                            <input type="hidden" name="meta_split_id" value="" />
+                            <input type="hidden" name="listname" value="awlist6871988" />
+                            <input type="hidden" name="redirect" value="https://www.aweber.com/thankyou-coi.htm?m=text"
+                                id="redirect_35ccd6634a9d659f0b5a18cc4e157aff" />
+                            
+                            <input type="hidden" name="meta_adtracking" value="Version_2.0_Waitlist" />
+                            <input type="hidden" name="meta_message" value="1" />
+                            <input type="hidden" name="meta_required" value="email" />
+                            
+                            <input type="hidden" name="meta_tooltip" value="" />
+
+                            <button type="submit" name="submit" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-green-700 hover:bg-green-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 pulse-button">
                                 <i class="fas fa-bell mr-2"></i> Notify Me When 2.0 Launches
                             </button>
                         </form>
@@ -301,15 +355,15 @@
                     <span class="block">Ready to streamline your mulch fundraiser?</span>
                     <span class="block text-green-100">Get started with MulchMapper today.</span>
                 </h2>
-                <div class="mt-8 flex lg:mt-0 lg:flex-shrink-0">
-                    <div class="inline-flex rounded-md shadow">
-                        <a href="/login" class="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-green-700 bg-white hover:bg-green-50">
-                            Sign In
+                <div class="mt-8 flex flex-col sm:flex-row lg:mt-0 lg:flex-shrink-0">
+                    <div class="inline-flex rounded-md shadow mb-4 sm:mb-0">
+                        <a href="#register-org-modal" onclick="document.getElementById('register-org-modal').classList.remove('hidden')" class="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-green-800 bg-white hover:bg-green-50">
+                            <i class="fas fa-building mr-2"></i> Register Your Organization
                         </a>
                     </div>
-                    <div class="ml-3 inline-flex rounded-md shadow">
-                        <a href="/register" class="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-green-800 hover:bg-green-900">
-                            Register as Driver
+                    <div class="sm:ml-3 inline-flex rounded-md shadow">
+                        <a href="#school-login-modal" onclick="document.getElementById('school-login-modal').classList.remove('hidden')" class="inline-flex items-center justify-center px-5 py-3 border border-gray-300 text-base font-medium rounded-md text-gray-700 bg-white hover:bg-gray-100">
+                            Organization Login
                         </a>
                     </div>
                 </div>
@@ -335,13 +389,13 @@
                             <h3 class="text-sm font-semibold text-gray-400 tracking-wider uppercase">Resources</h3>
                             <ul role="list" class="mt-4 space-y-4">
                                 <li>
-                                    <a href="#" class="text-base text-gray-300 hover:text-white">Documentation</a>
+                                    <a href="/pages/documentation.html" class="text-base text-gray-300 hover:text-white">Documentation</a>
                                 </li>
                                 <li>
-                                    <a href="#" class="text-base text-gray-300 hover:text-white">Driver Guide</a>
+                                    <a href="/pages/driver-guide.html" class="text-base text-gray-300 hover:text-white">Driver Guide</a>
                                 </li>
                                 <li>
-                                    <a href="#" class="text-base text-gray-300 hover:text-white">FAQs</a>
+                                    <a href="/pages/faqs.html" class="text-base text-gray-300 hover:text-white">FAQs</a>
                                 </li>
                                 <li>
                                     <a href="#" class="text-base text-gray-300 hover:text-white">Contact Support</a>
@@ -352,16 +406,16 @@
                             <h3 class="text-sm font-semibold text-gray-400 tracking-wider uppercase">Company</h3>
                             <ul role="list" class="mt-4 space-y-4">
                                 <li>
-                                    <a href="#" class="text-base text-gray-300 hover:text-white">About Us</a>
+                                    <a href="/pages/about-us.html" class="text-base text-gray-300 hover:text-white">About Us</a>
                                 </li>
                                 <li>
                                     <a href="#" class="text-base text-gray-300 hover:text-white">Pricing</a>
                                 </li>
                                 <li>
-                                    <a href="#" class="text-base text-gray-300 hover:text-white">Privacy Policy</a>
+                                    <a href="/pages/privacy-policy.html" class="text-base text-gray-300 hover:text-white">Privacy Policy</a>
                                 </li>
                                 <li>
-                                    <a href="#" class="text-base text-gray-300 hover:text-white">Terms of Service</a>
+                                    <a href="/pages/terms-of-service.html" class="text-base text-gray-300 hover:text-white">Terms of Service</a>
                                 </li>
                             </ul>
                         </div>
@@ -375,5 +429,191 @@
             </div>
         </div>
     </footer>
+    <!-- Register Organization Modal -->    
+    <div id="register-org-modal" class="fixed inset-0 z-50 overflow-y-auto hidden" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+        <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+            <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true" onclick="document.getElementById('register-org-modal').classList.add('hidden')"></div>
+            <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+            <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+                <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                    <div class="sm:flex sm:items-start">
+                        <div class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-green-100 sm:mx-0 sm:h-10 sm:w-10">
+                            <i class="fas fa-building text-green-700"></i>
+                        </div>
+                        <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+                            <h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-title">
+                                Register Your Organization
+                            </h3>
+                            <div class="mt-2">
+                                <p class="text-sm text-gray-500">
+                                    Get started with MulchMapper by registering your school or organization.
+                                </p>
+                                <div class="mt-4 rounded-md bg-yellow-50 p-4">
+                                    <div class="flex">
+                                        <div class="flex-shrink-0">
+                                            <i class="fas fa-info-circle text-yellow-400"></i>
+                                        </div>
+                                        <div class="ml-3">
+                                            <h3 class="text-sm font-medium text-yellow-800">Registration Temporarily Closed</h3>
+                                            <div class="mt-2 text-sm text-yellow-700">
+                                                <p>We're currently updating MulchMapper to version 2.0! New organization registrations will open soon.</p>
+                                                <p class="mt-2">Please sign up for our waitlist to be notified when we re-launch. You'll be among the first to access the improved platform with even more powerful features.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <form class="mt-6" action="/organization-signup" method="POST">
+                                    <div class="space-y-4">
+                                        <div>
+                                            <label for="org-name" class="block text-sm font-medium text-gray-700">Organization Name</label>
+                                            <div class="mt-1">
+                                                <input type="text" name="org-name" id="org-name" class="shadow-sm focus:ring-green-500 focus:border-green-500 block w-full sm:text-sm border-gray-300 rounded-md" placeholder="School or Organization Name" required>
+                                            </div>
+                                        </div>
+                                        
+                                        <div>
+                                            <label for="org-code" class="block text-sm font-medium text-gray-700">Desired URL Code</label>
+                                            <div class="mt-1 relative rounded-md shadow-sm">
+                                                <input type="text" name="org-code" id="org-code" class="focus:ring-green-500 focus:border-green-500 block w-full pr-16 sm:text-sm border-gray-300 rounded-md" placeholder="yourschool" required>
+                                                <div class="absolute inset-y-0 right-0 flex items-center">
+                                                    <span class="text-gray-500 sm:text-sm pr-3">.mulchmapper.com</span>
+                                                </div>
+                                            </div>
+                                            <p class="mt-1 text-xs text-gray-500">This will be your unique URL for accessing MulchMapper</p>
+                                        </div>
+                                        
+                                        <div>
+                                            <label for="contact-name" class="block text-sm font-medium text-gray-700">Contact Name</label>
+                                            <div class="mt-1">
+                                                <input type="text" name="contact-name" id="contact-name" class="shadow-sm focus:ring-green-500 focus:border-green-500 block w-full sm:text-sm border-gray-300 rounded-md" placeholder="Your Name" required>
+                                            </div>
+                                        </div>
+                                        
+                                        <div>
+                                            <label for="contact-email" class="block text-sm font-medium text-gray-700">Contact Email</label>
+                                            <div class="mt-1">
+                                                <input type="email" name="contact-email" id="contact-email" class="shadow-sm focus:ring-green-500 focus:border-green-500 block w-full sm:text-sm border-gray-300 rounded-md" placeholder="email@example.com" required>
+                                            </div>
+                                        </div>
+                                        
+                                        <div>
+                                            <label for="contact-phone" class="block text-sm font-medium text-gray-700">Contact Phone</label>
+                                            <div class="mt-1">
+                                                <input type="tel" name="contact-phone" id="contact-phone" class="shadow-sm focus:ring-green-500 focus:border-green-500 block w-full sm:text-sm border-gray-300 rounded-md" placeholder="(123) 456-7890">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="mt-6 sm:flex sm:flex-row-reverse">
+                                        <button type="button" disabled class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-gray-400 text-base font-medium text-white sm:ml-3 sm:w-auto sm:text-sm cursor-not-allowed">
+                                            Continue to Subscription
+                                            <span class="ml-2"><i class="fas fa-lock"></i></span>
+                                        </button>
+                                        <a href="#" class="join-waitlist-btn mt-3 w-full inline-flex justify-center rounded-md border border-green-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-green-700 hover:bg-green-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:mt-0 sm:w-auto sm:text-sm">
+                                            <i class="fas fa-bell mr-2"></i> Join the Waitlist
+                                        </a>
+                                        <button type="button" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm" onclick="document.getElementById('register-org-modal').classList.add('hidden')">
+                                            Close
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- School Login Modal -->    
+    <div id="school-login-modal" class="fixed inset-0 z-50 overflow-y-auto hidden" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+        <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+            <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true" onclick="document.getElementById('school-login-modal').classList.add('hidden')"></div>
+            <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+            <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+                <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                    <div class="sm:flex sm:items-start">
+                        <div class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-green-100 sm:mx-0 sm:h-10 sm:w-10">
+                            <i class="fas fa-school text-green-700"></i>
+                        </div>
+                        <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+                            <h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-title">
+                                Organization Login
+                            </h3>
+                            <div class="mt-2">
+                                <p class="text-sm text-gray-500">
+                                    Enter your organization code to access your MulchMapper instance.
+                                </p>
+                                <form class="mt-4" action="/school-redirect" method="GET">
+                                    <div>
+                                        <label for="school-code" class="block text-sm font-medium text-gray-700">Organization Code</label>
+                                        <div class="mt-1 relative rounded-md shadow-sm">
+                                            <input type="text" name="school-code" id="school-code" class="focus:ring-green-500 focus:border-green-500 block w-full pr-16 sm:text-sm border-gray-300 rounded-md" placeholder="yourschool">
+                                            <div class="absolute inset-y-0 right-0 flex items-center">
+                                                <label for="suffix" class="sr-only">Suffix</label>
+                                                <span class="text-gray-500 sm:text-sm pr-3">.mulchmapper.com</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="mt-6 sm:flex sm:flex-row-reverse">
+                                        <button type="submit" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-green-700 text-base font-medium text-white hover:bg-green-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:ml-3 sm:w-auto sm:text-sm">
+                                            Continue to Login
+                                        </button>
+                                        <button type="button" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:mt-0 sm:w-auto sm:text-sm" onclick="document.getElementById('school-login-modal').classList.add('hidden')">
+                                            Cancel
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Driver Code Modal -->
+    <div id="driver-code-modal" class="fixed inset-0 z-50 overflow-y-auto hidden" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+        <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+            <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true" onclick="document.getElementById('driver-code-modal').classList.add('hidden')"></div>
+            <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+            <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+                <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                    <div class="sm:flex sm:items-start">
+                        <div class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-green-100 sm:mx-0 sm:h-10 sm:w-10">
+                            <i class="fas fa-truck text-green-700"></i>
+                        </div>
+                        <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+                            <h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-title">
+                                Join as Driver
+                            </h3>
+                            <div class="mt-2">
+                                <p class="text-sm text-gray-500">
+                                    Please enter the driver registration code provided by your organization's fundraiser coordinator.
+                                </p>
+                                <form class="mt-4" action="/driver-registration" method="GET">
+                                    <div>
+                                        <label for="driver-code" class="block text-sm font-medium text-gray-700">Driver Registration Code</label>
+                                        <div class="mt-1">
+                                            <input type="text" name="driver-code" id="driver-code" class="shadow-sm focus:ring-green-500 focus:border-green-500 block w-full sm:text-sm border-gray-300 rounded-md" placeholder="ABCD-1234">
+                                        </div>
+                                        <p class="mt-2 text-xs text-gray-500">This code can be obtained from your organization's MulchMapper administrator.</p>
+                                    </div>
+                                    <div class="mt-6 sm:flex sm:flex-row-reverse">
+                                        <button type="submit" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-green-700 text-base font-medium text-white hover:bg-green-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:ml-3 sm:w-auto sm:text-sm">
+                                            Continue to Registration
+                                        </button>
+                                        <button type="button" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:mt-0 sm:w-auto sm:text-sm" onclick="document.getElementById('driver-code-modal').classList.add('hidden')">
+                                            Cancel
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
